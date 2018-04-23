@@ -1,0 +1,39 @@
+#include "mbed.h"  //mbed library
+#include "ultrasonic.h" //HC_SR04 library, make sure the program is working on HC_SR04
+DigitalOut led(LED1); //The output LED is lED 1 on mbed 
+ void dist(int distance)
+{
+            if (distance > 600) //if the distance is longer than 6cm, the led will flash slowly 
+            {
+                led = 1; //LED on for 1 second
+            }
+            else if(distance >= 200 && distance <= 600)//if the distance between 2cm and 6cm, the LED will flash normally
+            {
+                    led = 1;//LED on for 1 second
+                    wait(1);//LED keep on for 1 second
+                    led = 0;//LED off
+                    wait(1);//LED keep off for 1 second
+            }
+            else //if the distance is shorter than 2cm, the LED will flash fastly
+            {
+                    led = 1;// LED on for 1 second
+                    wait(0.5);// LED keep on for 0.5 second
+                    led = 0;// LED off
+                    wait(0.5); // LED keep off for 0.5 second
+
+            } 
+      
+ 
+}
+ultrasonic mu(p6,p21,.1,1, &dist);//Set the trigger pin to p6 and the echo pin to p21 have updates every 1 seconds and a timeout after 1 second, and call dist when the distance changes
+
+
+
+
+int main(){
+    mu.startUpdates();//start mesuring the distance
+    while(1)
+    {
+        mu.checkDistance();   //This is where the class checks if dist needs to be called.  
+    }
+}
